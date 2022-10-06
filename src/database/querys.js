@@ -8,5 +8,6 @@ export const queries =  {
     deleteClientById: 'DELETE FROM tb_clients WHERE Id = @Id',
     deleteClientByEmail: 'DELETE FROM tb_clients WHERE Email = @email',
     updateClientById: 'UPDATE tb_clients SET Name = @name, LastName = @lastName, Email = @email, Password = @password, Address = @address, PostalCode = @postalCode, UserType = @userType WHERE Id = @Id',
-    signUpUser: 'INSERT INTO tb_clients (email, password, userType) VALUES (@email, @password, @userType)',
+    signUpUser: 'INSERT INTO tb_clients (name, email, password, userType) VALUES (@name, @email, @password, @userType)',
+    // checkUserInDatabase: 'SELECT * FROM tb_clients WHERE email = @email'
 }

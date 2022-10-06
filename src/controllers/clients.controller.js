@@ -110,3 +110,35 @@ export const updateClientById = async (request, response) => {
     response.json({ name, lastName, email, password, address, postalCode, userType })
 
 }
+
+//SIGN UP USER
+export const signUpUser = async (request, response) => {
+    const bcrypt = require('bcrypt')
+    const {name, email, password, userType } = request.body
+    const hashedPassword = await bcrypt.hash(password, 10); //encrypted password
+    const pool = await getConnection();
+
+    //validating null fields
+    if(name == null || email == null || password == null || userType == null) {
+        return response.status(400).json({msg: 'Bad Request. Please fill out fields.'})
+    }
+
+    //TODO
+    //check if user already exists in the database
+    //Login with jwt authentication
+
+    try {
+      await pool
+        .request()
+        .input("name", sql.VarChar, name)
+        .input("email", sql.VarChar, email)
+        .input("password", sql.VarChar, hashedPassword)
+        .input("userType", sql.Char, userType)
+        .query(queries.signUpUser);
+    } catch (e) {
+      console.log(e);
+      response.status(500).send("Bad Request");
+    }
+  
+    response.json({ name, email, hashedPassword, userType });
+}
