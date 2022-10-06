@@ -87,7 +87,7 @@ export const deleteClientByEmail = async (request, response) => { //Delete Metho
 }
 
 export const updateClientById = async (request, response) => {
-    const {name, lastName, email, password, address, postalCode, userType } = request.body
+    const { name, lastName, email, password, address, postalCode, userType } = request.body
     const { id } = request.params
     
     if(name == null || lastName == null || address == null || postalCode == null || userType == null) {

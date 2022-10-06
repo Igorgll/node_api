@@ -7,5 +7,6 @@ export const queries =  {
     getClientByEmail: 'SELECT * FROM tb_clients WHERE Email = @email',
     deleteClientById: 'DELETE FROM tb_clients WHERE Id = @Id',
     deleteClientByEmail: 'DELETE FROM tb_clients WHERE Email = @email',
-    updateClientById: 'UPDATE tb_clients SET Name = @name, LastName = @lastName, Email = @email, Password = @password, Address = @address, PostalCode = @postalCode, UserType = @userType WHERE Id = @Id'
+    updateClientById: 'UPDATE tb_clients SET Name = @name, LastName = @lastName, Email = @email, Password = @password, Address = @address, PostalCode = @postalCode, UserType = @userType WHERE Id = @Id',
+    signUpUser: 'INSERT INTO tb_clients (email, password, userType) VALUES (@email, @password, @userType)',
 }
