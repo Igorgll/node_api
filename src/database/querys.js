@@ -13,3 +13,5 @@ export const queries =  {
     userLogin: 'INSERT INTO tb_adminUsers (email, password) VALUES (@email, @password)',
     getUserByEmail: 'SELECT * FROM tb_adminUsers WHERE email = @email',
 }
+
+export default queries;

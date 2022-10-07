@@ -1,5 +1,6 @@
-import { getConnection, sql, queries } from "../database";
-import { config } from "dotenv";
+import getConnection from '../database/connection.js';
+import sql from '../database/connection.js';
+import queries from '../database/querys.js';
 
 //ADMIN USERS
 export const getUsers = async (request, response) => {

@@ -1,5 +1,5 @@
 import sql from 'mssql';
-import config from '../config';
+import config from '../config.js';
 
 const dbSettings = { //Settings to connect to the database
     user: config.dbUser,
@@ -23,4 +23,4 @@ export async function getConnection() {
     }
 }
 
-export { sql };
+export default getConnection;

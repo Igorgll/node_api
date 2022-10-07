@@ -7,9 +7,9 @@ import {
   deleteClientById,
   updateClientById,
   deleteClientByEmail,
-} from "../controllers/clients.controller";
+} from "../controllers/clients.controller.js";
 
-import { getUsers, signUpUser, userLogin } from "../controllers/users.controller";
+import { getUsers, signUpUser, userLogin } from "../controllers/users.controller.js";
 
 const router = Router();
 

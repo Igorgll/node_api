@@ -1,4 +1,6 @@
-import { getConnection, sql, queries } from '../database';
+import getConnection from '../database/connection.js';
+import sql from '../database/connection.js';
+import queries from '../database/querys.js';
 
 //CLIENTS
 export const getClients = async (request, response) => { //GET All Clients
