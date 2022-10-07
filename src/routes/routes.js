@@ -13,6 +13,10 @@ import { getUsers, signUpUser, userLogin } from "../controllers/users.controller
 
 const router = Router();
 
+router.get('/', (request, response) => {
+  response.send('Server running!')
+})
+
 //CLIENTS
 router.get("/clients", getClients); //GET ALL Route
 
