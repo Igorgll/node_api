@@ -5,8 +5,7 @@ import routes from './routes/routes';
 const app = express()
 
 //Settings
-// app.set('port', config.port)
-app.listen(process.env.PORT || 3000);
+app.set('port', config.port)
 
 //middleware
 app.use(express.json())
