@@ -86,6 +86,11 @@ export const userLogin = async (request, response) => {
           expiresIn: 360,
         });
 
+        await pool.request()
+        .input('email', sql.VarChar, email)
+        .input('password', sql.VarChar, password)
+        .query(queries.userLogin)
+        
         response.send("Token sucessfully created.", token);
         response.send({ email, token });
       }
