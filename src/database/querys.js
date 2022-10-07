@@ -10,4 +10,5 @@ export const queries =  {
     updateClientById: 'UPDATE tb_clients SET Name = @name, LastName = @lastName, Email = @email, Address = @address, PostalCode = @postalCode WHERE Id = @Id',
     getAllUsers: 'SELECT * FROM tb_adminUsers',
     signUpUser: 'INSERT INTO tb_adminUsers (name, email, password) VALUES (@name, @email, @password)',
+    getUserByEmail: 'SELECT * FROM tb_adminUsers WHERE email = @email',
 }

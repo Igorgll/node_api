@@ -4,9 +4,14 @@ import { getConnection, sql, queries } from '../database';
 export const getClients = async (request, response) => { //GET All Clients
     try {
         const pool = await getConnection()
-        const result = await pool.request().query(queries.getAllClients)
-    
-        response.json(result.recordset);
+        const result = await pool.request()
+        .query(queries.getAllClients)
+
+        if (result.recordset.length < 1) { // checks if clients list is empty
+            response.send('Empty list')
+        } else {
+            response.json(result.recordset);
+        }
     } 
     catch(error) {
         response.status(500)
@@ -24,16 +29,23 @@ export const createNewClient = async (request, response) => { //Create new clien
 
    try {
         const pool = await getConnection()
-        await pool
-        .request()
-        .input('name', sql.VarChar, name)
-        .input('lastName', sql.VarChar, lastName)
+        const clientExistResult = await pool.request() // validate client in the database
         .input('email', sql.VarChar, email)
-        .input('address', sql.VarChar, address)
-        .input('postalCode', sql.VarChar, postalCode)
-        .query(queries.createNewClient)
-
-        response.json({name, lastName, email, address, postalCode})
+        .query(queries.getClientByEmail)
+        if(clientExistResult.recordset && clientExistResult.recordset.length > 0) {
+            response.send('Client already registered.')
+        } else {
+            await pool
+            .request()
+            .input('name', sql.VarChar, name)
+            .input('lastName', sql.VarChar, lastName)
+            .input('email', sql.VarChar, email)
+            .input('address', sql.VarChar, address)
+            .input('postalCode', sql.VarChar, postalCode)
+            .query(queries.createNewClient)
+    
+            response.json({name, lastName, email, address, postalCode})
+        }
    } catch (error) {
         response.status(500)
         response.send(error.message)
@@ -49,6 +61,7 @@ export const getClientById = async (request, response) => { //Get Method to get 
     .query(queries.getClientById)
 
     response.send(result.recordset[0])
+
 }
 
 export const getClientByEmail = async (request, response) => { //Get Method to get client by Email
@@ -70,6 +83,7 @@ export const deleteClientById = async (request, response) => { //Delete Method t
     .input('Id', id)
     .query(queries.deleteClientById)
 
+    response.send('Client deleted.')
     response.send(result)
 }
 
@@ -81,6 +95,7 @@ export const deleteClientByEmail = async (request, response) => { //Delete Metho
     .input('Email', email)
     .query(queries.deleteClientByEmail)
 
+    response.send('Client deleted.')
     response.send(result)
 }
 
@@ -103,6 +118,7 @@ export const updateClientById = async (request, response) => {
         .input('Id', id)
         .query(queries.updateClientById)
 
+    response.json('User updated.')    
     response.json({ name, lastName, email, address, postalCode })
 
 }

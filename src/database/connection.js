@@ -1,7 +1,7 @@
 import sql from 'mssql';
 import config from '../config';
 
-const dbSettings = { //Setting to connect to the database
+const dbSettings = { //Settings to connect to the database
     user: config.dbUser,
     password: config.dbPassword,
     server: config.dbServer,
