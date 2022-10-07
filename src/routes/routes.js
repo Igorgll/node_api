@@ -9,7 +9,7 @@ import {
   deleteClientByEmail,
 } from "../controllers/clients.controller";
 
-import { getUsers, signUpUser } from "../controllers/users.controller";
+import { getUsers, signUpUser, userLogin } from "../controllers/users.controller";
 
 const router = Router();
 
@@ -32,5 +32,7 @@ router.delete("/clients/email/:email", deleteClientByEmail); // Delete Cliente B
 router.get("/users", getUsers) // Get all users
 
 router.post("/users/signup", signUpUser) // Create new User
+
+router.post("/users/login", userLogin) // Create new User
 
 export default router;
