@@ -1,6 +1,6 @@
-import { request } from 'express';
-import { getConnection, sql, querys, queries } from '../database';
+import { getConnection, sql, queries } from '../database';
 
+//CLIENTS
 export const getClients = async (request, response) => { //GET All Clients
     try {
         const pool = await getConnection()
@@ -15,10 +15,10 @@ export const getClients = async (request, response) => { //GET All Clients
 };
 
 export const createNewClient = async (request, response) => { //Create new client method
-    const {name, lastName, email, password, address, postalCode, userType } = request.body
+    const { name, lastName, email, address, postalCode } = request.body
 
     //validating null fields
-    if(name == null || lastName == null || address == null || postalCode == null) {
+    if(name == null || lastName == null || email == null ||address == null || postalCode == null) {
         return response.status(400).json({msg: 'Bad Request. Please fill out fields.'})
     }
 
@@ -29,13 +29,11 @@ export const createNewClient = async (request, response) => { //Create new clien
         .input('name', sql.VarChar, name)
         .input('lastName', sql.VarChar, lastName)
         .input('email', sql.VarChar, email)
-        .input('password', sql.VarChar, password)
         .input('address', sql.VarChar, address)
         .input('postalCode', sql.VarChar, postalCode)
-        .input('userType', sql.Char, userType)
         .query(queries.createNewClient)
 
-        response.json({name, lastName, email, password, address, postalCode, userType})
+        response.json({name, lastName, email, address, postalCode})
    } catch (error) {
         response.status(500)
         response.send(error.message)
@@ -70,7 +68,7 @@ export const deleteClientById = async (request, response) => { //Delete Method t
     const pool = await getConnection()
     const result = await pool.request()
     .input('Id', id)
-    .query(queries.deleteClient)
+    .query(queries.deleteClientById)
 
     response.send(result)
 }
@@ -87,10 +85,10 @@ export const deleteClientByEmail = async (request, response) => { //Delete Metho
 }
 
 export const updateClientById = async (request, response) => {
-    const { name, lastName, email, password, address, postalCode, userType } = request.body
+    const { name, lastName, email, address, postalCode } = request.body
     const { id } = request.params
     
-    if(name == null || lastName == null || address == null || postalCode == null || userType == null) {
+    if(name == null || lastName == null || email == null || address == null || postalCode == null) {
         return response.status(400).json({msg: 'Bad Request. Please fill out fields.'})
     }
 
@@ -100,45 +98,11 @@ export const updateClientById = async (request, response) => {
         .input('name', sql.VarChar, name)
         .input('lastName', sql.VarChar, lastName)
         .input('email', sql.VarChar, email)
-        .input('password', sql.VarChar, password)
         .input('address', sql.VarChar, address)
         .input('postalCode', sql.VarChar, postalCode)
-        .input('userType', sql.Char, userType)
         .input('Id', id)
         .query(queries.updateClientById)
 
-    response.json({ name, lastName, email, password, address, postalCode, userType })
+    response.json({ name, lastName, email, address, postalCode })
 
-}
-
-//SIGN UP USER
-export const signUpUser = async (request, response) => {
-    const bcrypt = require('bcrypt')
-    const {name, email, password, userType } = request.body
-    const hashedPassword = await bcrypt.hash(password, 10); //encrypted password
-    const pool = await getConnection();
-
-    //validating null fields
-    if(name == null || email == null || password == null || userType == null) {
-        return response.status(400).json({msg: 'Bad Request. Please fill out fields.'})
-    }
-
-    //TODO
-    //check if user already exists in the database
-    //Login with jwt authentication
-
-    try {
-      await pool
-        .request()
-        .input("name", sql.VarChar, name)
-        .input("email", sql.VarChar, email)
-        .input("password", sql.VarChar, hashedPassword)
-        .input("userType", sql.Char, userType)
-        .query(queries.signUpUser);
-    } catch (e) {
-      console.log(e);
-      response.status(500).send("Bad Request");
-    }
-  
-    response.json({ name, email, hashedPassword, userType });
 }

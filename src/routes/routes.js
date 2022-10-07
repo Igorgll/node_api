@@ -7,13 +7,13 @@ import {
   deleteClientById,
   updateClientById,
   deleteClientByEmail,
-  signUpUser,
 } from "../controllers/clients.controller";
 
-import { getConnection, queries, sql } from "../database";
+import { getUsers, signUpUser } from "../controllers/users.controller";
 
 const router = Router();
 
+//CLIENTS
 router.get("/clients", getClients); //GET ALL Route
 
 router.post("/clients", createNewClient); // Create new client route
@@ -28,7 +28,9 @@ router.delete("/clients/:id", deleteClientById); // Delete Cliente By Id Route
 
 router.delete("/clients/email/:email", deleteClientByEmail); // Delete Cliente By Email Route
 
-// SIGN UP USER
-router.post("/clients/signup", signUpUser)
+//USERS
+router.get("/users", getUsers) // Get all users
+
+router.post("/users/signup", signUpUser) // Create new User
 
 export default router;
