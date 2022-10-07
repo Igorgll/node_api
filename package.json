@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src --exec babel-node",
-    "build": "webpack",
+    "build": "babel src -d dist",
     "start": "node dist"
   },
   "keywords": [],
