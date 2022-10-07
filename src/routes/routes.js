@@ -13,6 +13,8 @@ import { getUsers, signUpUser } from "../controllers/users.controller";
 
 const router = Router();
 
+router.get("/").send("Funcionado!")
+
 //CLIENTS
 router.get("/clients", getClients); //GET ALL Route
 
