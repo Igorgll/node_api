@@ -23,4 +23,4 @@ export async function getConnection() {
     }
 }
 
-export default {getConnection};
+export default { sql };
