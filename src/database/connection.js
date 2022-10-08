@@ -17,11 +17,12 @@ const dbSettings = {
 
 const pool = await sql.connect(dbSettings);
 
-//CREATE TABLES IF IT DOESN'T EXIST
+//CREATE DATABASE/TABLES IF IT DOESN'T EXIST
 pool.connect(error => {
   if(error) {
     console.log(error);
   }else {
+    pool.request().query(queries.createDatabase)
     pool.request().query(queries.createUsersTable)
     pool.request().query(queries.createClientsTable)
   }
