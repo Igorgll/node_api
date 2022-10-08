@@ -2,7 +2,7 @@ import sql from "mssql";
 import dbSettings from "../database/connection.js";
 import queries from "../database/querys.js";
 import bcrypt from "bcrypt";
-import JsonWebTokenError from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 //ADMIN USERS
 export const getUsers = async (request, response) => {
@@ -59,47 +59,48 @@ export const signUpUser = async (request, response) => {
 
 //jwt login authentication
 export const userLogin = async (request, response) => {
-  const { email, password } = request.body;
-  const SECRET_TOKEN = "secret";
+  const { email } = request.body;
+  const SECRET_TOKEN = "a40b4413c25e179d978340ee7cce3113" //header
 
   //validating null fields
-  if (email == null || password == null) {
+  if (email == null) {
     return response.status(400).send("Bad Request. Please fill out fields.");
   } else {
-    response.send("Deu ruim");
-  }
+    try {
+      const pool = await sql.connect(dbSettings);
+      const userExistResult = await pool
+        .request()
+        .input("email", sql.VarChar, email)
+        .query(queries.getUserByEmail);
+      if (userExistResult.recordset && userExistResult.recordset.length > 0) {
+        let user = userExistResult.recordset[0];
+        let passwordIsValid = bcrypt.compareSync(
+          //compare encrypted password
+          request.body.password,
+          user.Password, function(err, result) {
+            if (err) throw err;
+            response.send(result)
+          }
+          );
+        if (passwordIsValid) {
+          let token = jwt.sign({ id: user.email }, SECRET_TOKEN, {
+            expiresIn: 360,
+          });
 
-  try {
-    const pool = await sql.connect(dbSettings);
-    const userExistResult = await pool
-      .request()
-      .input("email", sql.VarChar, email)
-      .query(queries.getUserByEmail);
-    if (userExistResult.recordset && userExistResult.recordset.length > 0) {
-      let user = userExistResult.recordset[0];
-      let passwordIsValid = bcrypt.compareSync(
-        //compare encrypted password
-        request.body.password,
-        user.password
-      );
-      if (passwordIsValid) {
-        let token = jwt.sign({ id: user.email }, SECRET_TOKEN, {
-          expiresIn: 360,
-        });
+          await pool
+            .request()
+            .input("email", sql.VarChar, email)
+            .input("password", sql.VarChar, user.Password)
+            .query(queries.userLogin);
 
-        await pool
-          .request()
-          .input("email", sql.VarChar, email)
-          .input("password", sql.VarChar, password)
-          .query(queries.userLogin);
-
-        response.send("Token sucessfully created.", token);
-        response.send({ email, token });
+          response.status(200, "Token sucessfully created.", token);
+          response.send({ email, token });
+        }
+      } else {
+        response.send("User not found.");
       }
-    } else {
-      response.send("User not found.");
+    } catch (e) {
+      console.log(e);
     }
-  } catch (e) {
-    console.log(e);
   }
 };
