@@ -23,6 +23,7 @@ pool.connect(error => {
     console.log(error);
   }else {
     pool.request().query(queries.createDatabase)
+    console.log("Database created!")
     pool.request().query(queries.createUsersTable)
     pool.request().query(queries.createClientsTable)
   }
