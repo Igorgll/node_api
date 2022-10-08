@@ -1,13 +1,12 @@
-import getConnection from '../database/connection.js';
-import sql from '../database/connection.js';
 import queries from '../database/querys.js';
+import dbSettings from '../database/connection.js';
+import sql from "mssql";
 
 //CLIENTS
 export const getClients = async (request, response) => { //GET All Clients
     try {
-        const pool = await getConnection()
-        const result = await pool.request()
-        .query(queries.getAllClients)
+        await sql.connect(dbSettings)
+        const result = await sql.query(queries.getAllClients)
 
         if (result.recordset.length < 1) { // checks if clients list is empty
             response.send('Empty list')
@@ -30,8 +29,8 @@ export const createNewClient = async (request, response) => { //Create new clien
     }
 
    try {
-        const pool = await getConnection()
-        const clientExistResult = await pool.request() // validate client in the database
+        const pool = await sql.connect(dbSettings)
+        const clientExistResult = await pool.request()
         .input('email', sql.VarChar, email)
         .query(queries.getClientByEmail)
         if(clientExistResult.recordset && clientExistResult.recordset.length > 0) {
@@ -57,9 +56,9 @@ export const createNewClient = async (request, response) => { //Create new clien
 export const getClientById = async (request, response) => { //Get Method to get client by Id
     const { id } = request.params
 
-    const pool = await getConnection()
+    const pool = await sql.connect(dbSettings)
     const result = await pool.request()
-    .input('Id', id)
+    .input('Id', sql.Int, id)
     .query(queries.getClientById)
 
     response.send(result.recordset[0])
@@ -69,9 +68,9 @@ export const getClientById = async (request, response) => { //Get Method to get 
 export const getClientByEmail = async (request, response) => { //Get Method to get client by Email
     const { email } = request.params
 
-    const pool = await getConnection()
+    const pool = await sql.connect(dbSettings)
     const result = await pool.request()
-    .input('Email', email)
+    .input('Email', sql.VarChar, email)
     .query(queries.getClientByEmail)
 
     response.send(result.recordset[0])
@@ -80,9 +79,9 @@ export const getClientByEmail = async (request, response) => { //Get Method to g
 export const deleteClientById = async (request, response) => { //Delete Method to delete client by Id
     const { id } = request.params
 
-    const pool = await getConnection()
+    const pool = await sql.connect(dbSettings)
     const result = await pool.request()
-    .input('Id', id)
+    .input('Id', sql.Int, id)
     .query(queries.deleteClientById)
 
     response.send('Client deleted.')
@@ -92,9 +91,9 @@ export const deleteClientById = async (request, response) => { //Delete Method t
 export const deleteClientByEmail = async (request, response) => { //Delete Method to delete client by Email
     const { email } = request.params
 
-    const pool = await getConnection()
+    const pool = await sql.connect(dbSettings)
     const result = await pool.request()
-    .input('Email', email)
+    .input('Email', sql.VarChar, email)
     .query(queries.deleteClientByEmail)
 
     response.send('Client deleted.')
@@ -109,7 +108,7 @@ export const updateClientById = async (request, response) => {
         return response.status(400).json({msg: 'Bad Request. Please fill out fields.'})
     }
 
-    const pool = await getConnection()
+    const pool = await sql.connect(dbSettings)
     await pool
         .request()
         .input('name', sql.VarChar, name)
@@ -117,7 +116,7 @@ export const updateClientById = async (request, response) => {
         .input('email', sql.VarChar, email)
         .input('address', sql.VarChar, address)
         .input('postalCode', sql.VarChar, postalCode)
-        .input('Id', id)
+        .input('Id', sql.Int, id)
         .query(queries.updateClientById)
 
     response.json('User updated.')    

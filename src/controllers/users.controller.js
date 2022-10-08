@@ -1,13 +1,14 @@
-import { request } from "express";
-import getConnection from "../database/connection.js";
-import sql from "../database/connection.js";
+import sql from "mssql";
+import dbSettings from "../database/connection.js";
 import queries from "../database/querys.js";
+import bcrypt from "bcrypt";
+import JsonWebTokenError from "jsonwebtoken";
 
 //ADMIN USERS
 export const getUsers = async (request, response) => {
   //GET All Users
   try {
-    const pool = await getConnection();
+    const pool = await sql.connect(dbSettings);
     const result = await pool.request().query(queries.getAllUsers);
 
     if (result.recordset.length < 0) {
@@ -23,7 +24,6 @@ export const getUsers = async (request, response) => {
 
 //Create New Admin User
 export const signUpUser = async (request, response) => {
-  const bcrypt = require("bcrypt");
   const { name, email, password } = request.body;
   const hashedPassword = await bcrypt.hash(password, 10); //encrypted password
 
@@ -35,7 +35,7 @@ export const signUpUser = async (request, response) => {
   }
 
   try {
-    const pool = await getConnection();
+    const pool = await sql.connect(dbSettings);
     const userExistResult = await pool
       .request()
       .input("email", sql.VarChar, email)
@@ -59,8 +59,6 @@ export const signUpUser = async (request, response) => {
 
 //jwt login authentication
 export const userLogin = async (request, response) => {
-  const bcrypt = require("bcrypt");
-  const jwt = require("jsonwebtoken");
   const { email, password } = request.body;
   const SECRET_TOKEN = "secret";
 
@@ -72,7 +70,7 @@ export const userLogin = async (request, response) => {
   }
 
   try {
-    const pool = await getConnection();
+    const pool = await sql.connect(dbSettings);
     const userExistResult = await pool
       .request()
       .input("email", sql.VarChar, email)
