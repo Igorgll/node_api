@@ -1,6 +1,7 @@
-import getConnection from '../database/connection.js';
-import sql from '../database/connection.js';
-import queries from '../database/querys.js';
+import { request } from "express";
+import getConnection from "../database/connection.js";
+import sql from "../database/connection.js";
+import queries from "../database/querys.js";
 
 //ADMIN USERS
 export const getUsers = async (request, response) => {
@@ -78,7 +79,8 @@ export const userLogin = async (request, response) => {
       .query(queries.getUserByEmail);
     if (userExistResult.recordset && userExistResult.recordset.length > 0) {
       let user = userExistResult.recordset[0];
-      let passwordIsValid = bcrypt.compareSync(//compare encrypted password
+      let passwordIsValid = bcrypt.compareSync(
+        //compare encrypted password
         request.body.password,
         user.password
       );
@@ -87,16 +89,17 @@ export const userLogin = async (request, response) => {
           expiresIn: 360,
         });
 
-        await pool.request()
-        .input('email', sql.VarChar, email)
-        .input('password', sql.VarChar, password)
-        .query(queries.userLogin)
-        
+        await pool
+          .request()
+          .input("email", sql.VarChar, email)
+          .input("password", sql.VarChar, password)
+          .query(queries.userLogin);
+
         response.send("Token sucessfully created.", token);
         response.send({ email, token });
       }
-    }else {
-      response.send("User not found.")
+    } else {
+      response.send("User not found.");
     }
   } catch (e) {
     console.log(e);
