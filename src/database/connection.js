@@ -1,26 +1,26 @@
-import sql from 'mssql';
-import config from '../config.js';
+import sql from "mssql";
+import config from "../config.js";
 
-const dbSettings = { //Settings to connect to the database
-    user: config.dbUser,
-    password: config.dbPassword,
-    server: config.dbServer,
-    database: config.dbDatabase,
+const dbSettings = {
+  //Settings to connect to the database
+  user: config.dbUser,
+  password: config.dbPassword,
+  server: config.dbServer,
+  database: config.dbDatabase,
 
-    options: {
-        encrypt: true,
-        trustServerCertificate: true,
-    }
-}
+  options: {
+    encrypt: true,
+    trustServerCertificate: true,
+  },
+};
 
 export async function getConnection() {
-    try {
-        const pool = await sql.connect(dbSettings)
-        return pool;
-    }
-    catch(error) {
-        console.log(error)
-    }
+  try {
+    const pool = await sql.connect(dbSettings);
+    return pool;
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export default { sql, getConnection };
