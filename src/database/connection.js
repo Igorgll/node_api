@@ -1,5 +1,5 @@
-import { response } from "express";
 import config from "../config.js";
+import sql from "mssql";
 import queries from "./querys.js";
 
 const dbSettings = {
@@ -14,5 +14,18 @@ const dbSettings = {
     trustServerCertificate: true,
   },
 };
+
+const pool = await sql.connect(dbSettings);
+
+//CREATE DATABASE IF IT DOESN'T EXIST
+pool.connect(error => {
+  if(error) {
+    console.log(error);
+  }else {
+    pool.request().query(queries.createDatabase)
+    pool.request().query(queries.createUsersTable)
+    pool.request().query(queries.createClientsTable)
+  }
+})
 
 export default dbSettings;
