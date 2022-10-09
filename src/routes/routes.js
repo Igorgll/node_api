@@ -25,15 +25,6 @@ router.post("/users/signup", signUpUser) // Create new user
 
 router.post("/users/login", userLogin) // Login User
 
-const token = 'a40b4413c25e179d978340ee7cce3113';
-
-// router.use(function(request, response, next) { // Make sure token was sent to access clients informations
-//   if ((!request.headers['x-auth'])) {
-//     return response.status(401).json({ error: 'Not authorized!' });
-//   }
-//   next(); // Let the user proceed
-// });
-
 //Protected clients routes
 router.get("/clients", getClients, (request, response) => {
     if (request.headers.authorization !== SECRET_TOKEN) {
