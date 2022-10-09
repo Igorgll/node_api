@@ -4,9 +4,9 @@ import queries from "../database/querys.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-//ADMIN USERS
+//Admin users
 export const getUsers = async (request, response) => {
-  //GET All Users
+  //Get all users
   try {
     const pool = await sql.connect(dbSettings);
     const result = await pool.request().query(queries.getAllUsers);
@@ -27,7 +27,7 @@ export const signUpUser = async (request, response) => {
   const { name, email, password } = request.body;
   const hashedPassword = await bcrypt.hash(password, 10); //encrypted password
 
-  //validating null fields
+  //Validating null fields
   if (name == null || email == null || password == null) {
     return response
       .status(400)
@@ -57,13 +57,13 @@ export const signUpUser = async (request, response) => {
   }
 };
 
-//jwt login authentication
+//Jwt login authentication
+export const SECRET_TOKEN = "a40b4413c25e179d978340ee7cce3113" //header
 export const userLogin = async (request, response) => {
   const { email } = request.body;
-  const SECRET_TOKEN = "a40b4413c25e179d978340ee7cce3113" //header
 
-  //validating null fields
-  if (email == null) {
+  //Validating null fields
+  if (email == null || request.body.password == null) {
     return response.status(400).send("Bad Request. Please fill out fields.");
   } else {
     try {
@@ -75,14 +75,15 @@ export const userLogin = async (request, response) => {
       if (userExistResult.recordset && userExistResult.recordset.length > 0) {
         let user = userExistResult.recordset[0];
         let passwordIsValid = bcrypt.compareSync(
-          //compare encrypted password
+          //Compare plain text password from input with the encrypted one stored in the database
           request.body.password,
           user.Password, function(err, result) {
             if (err) throw err;
             response.send(result)
           }
           );
-        if (passwordIsValid) {
+          // If the user exists and the password is valid, generates a new token with expiration time
+        if (passwordIsValid) { 
           let token = jwt.sign({ id: user.email }, SECRET_TOKEN, {
             expiresIn: 360,
           });
@@ -96,8 +97,10 @@ export const userLogin = async (request, response) => {
           response.status(200, "Token sucessfully created.", token);
           response.send({ email, token });
         }
-      } else {
-        response.send("User not found.");
+        else {
+          response.status(404)
+          response.send("Wrong email or password.");
+         }
       }
     } catch (e) {
       console.log(e);

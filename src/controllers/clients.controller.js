@@ -2,15 +2,15 @@ import queries from "../database/querys.js";
 import dbSettings from "../database/connection.js";
 import sql from "mssql";
 
-//CLIENTS
+//Clients
 export const getClients = async (request, response) => {
-  //GET All Clients
+  //Get all clients
   try {
     await sql.connect(dbSettings);
     const result = await sql.query(queries.getAllClients);
 
     if (result.recordset.length < 1) {
-      // checks if clients list is empty
+      // Check if clients list is empty
       response.send("Empty list");
     } else {
       response.json(result.recordset);
@@ -25,7 +25,7 @@ export const createNewClient = async (request, response) => {
   //Create new client method
   const { name, lastName, email, address, postalCode } = request.body;
 
-  //validating null fields
+  //Validating null fields
   if (
     name == null ||
     lastName == null ||
@@ -78,7 +78,7 @@ export const getClientById = async (request, response) => {
 };
 
 export const getClientByEmail = async (request, response) => {
-  //Get Method to get client by Email
+  //Get method to get client by Email
   const { email } = request.params;
 
   const pool = await sql.connect(dbSettings);

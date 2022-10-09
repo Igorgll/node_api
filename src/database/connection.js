@@ -17,15 +17,16 @@ const dbSettings = {
 
 const pool = await sql.connect(dbSettings);
 
-//CREATE DATABASE/TABLES IF IT DOESN'T EXIST
+//Sql Server connection
 pool.connect(error => {
   if(error) {
     console.log(error);
   }else {
-    pool.request().query(queries.createDatabase)
+    pool.request().query(queries.createDatabase) // Creating database if it doesn't exist
     console.log("Database created!")
-    pool.request().query(queries.createUsersTable)
-    pool.request().query(queries.createClientsTable)
+    pool.request().query(queries.createUsersTable) // Creating users table if doesn't exist 
+    pool.request().query(queries.createClientsTable) // Creating clients table if doesn't exist
+    pool.request().query(queries.populateClientsTable) // Populate clients table
   }
 })
 
