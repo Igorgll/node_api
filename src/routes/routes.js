@@ -11,12 +11,17 @@ import {
 
 import { getUsers, signUpUser, userLogin } from "../controllers/users.controller.js";
 import { SECRET_TOKEN } from "../controllers/users.controller.js";
+import cors from 'cors';
 
 const router = Router();
 
 router.get('/', (request, response) => {
   response.send('Server running!')
 })
+
+router.use(cors({
+  origin: 'http://localhost:4200' //allow origin from front end to access the back end
+}));
 
 //Public users routes
 router.get("/users", getUsers) // Get all users
