@@ -158,9 +158,8 @@ export const updateClientById = async (request, response) => {
     .input("email", sql.VarChar, email)
     .input("address", sql.VarChar, address)
     .input("postalCode", sql.VarChar, postalCode)
-    .input("Id", sql.Int, id)
+    .input("id", sql.Int, id)
     .query(queries.updateClientById);
 
   response.json("User updated.");
-  response.json({ name, lastName, email, address, postalCode });
 };
