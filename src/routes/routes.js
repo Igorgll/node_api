@@ -3,10 +3,8 @@ import {
   createNewClient,
   getClients,
   getClientById,
-  getClientByEmail,
   deleteClientById,
   updateClientById,
-  deleteClientByEmail,
 } from "../controllers/clients.controller.js";
 
 import { getUsers, signUpUser, userLogin } from "../controllers/users.controller.js";
@@ -45,10 +43,6 @@ router.get("/clients/:id", getClientById); // Get client by id
 
 router.put("/clients/:id", updateClientById); // Update client by id
 
-router.get("/clients/email/:email", getClientByEmail); // Get client by email
-
 router.delete("/clients/:id", deleteClientById); // Delete cliente by id route
-
-router.delete("/clients/email/:email", deleteClientByEmail); // Delete cliente by email route
 
 export default router;

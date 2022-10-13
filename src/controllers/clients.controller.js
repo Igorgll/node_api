@@ -23,13 +23,13 @@ export const getClients = async (request, response) => {
 
 export const createNewClient = async (request, response) => {
   //Create new client method
-  const { name, lastName, email, address, postalCode } = request.body;
+  const { name, lastName, city, address, postalCode } = request.body;
 
   //Validating null fields
   if (
     name == null ||
     lastName == null ||
-    email == null ||
+    city == null ||
     address == null ||
     postalCode == null
   ) {
@@ -40,24 +40,16 @@ export const createNewClient = async (request, response) => {
 
   try {
     const pool = await sql.connect(dbSettings);
-    const clientExistResult = await pool
-      .request()
-      .input("email", sql.VarChar, email)
-      .query(queries.getClientByEmail);
-    if (clientExistResult.recordset && clientExistResult.recordset.length > 0) {
-      response.send("Client already registered.");
-    } else {
       await pool
         .request()
         .input("name", sql.VarChar, name)
         .input("lastName", sql.VarChar, lastName)
-        .input("email", sql.VarChar, email)
+        .input("city", sql.VarChar, city)
         .input("address", sql.VarChar, address)
         .input("postalCode", sql.VarChar, postalCode)
         .query(queries.createNewClient);
 
-      response.json({ name, lastName, email, address, postalCode });
-    }
+      response.json({ name, lastName, city, address, postalCode });
   } catch (error) {
     response.status(500);
     response.send(error.message);
@@ -77,18 +69,6 @@ export const getClientById = async (request, response) => {
   response.send(result.recordset[0]);
 };
 
-export const getClientByEmail = async (request, response) => {
-  //Get method to get client by Email
-  const { email } = request.params;
-
-  const pool = await sql.connect(dbSettings);
-  const result = await pool
-    .request()
-    .input("Email", sql.VarChar, email)
-    .query(queries.getClientByEmail);
-
-  response.send(result.recordset[0]);
-};
 
 export const deleteClientById = async (request, response, err) => {
   //Delete Method to delete client by Id
@@ -112,36 +92,14 @@ export const deleteClientById = async (request, response, err) => {
   }
 };
 
-export const deleteClientByEmail = async (request, response, err) => {
-  //Delete Method to delete client by Email
-  const { email } = request.params;
-
-  try {
-    const pool = await sql.connect(dbSettings);
-    const result = await pool
-      .request()
-      .input("Email", sql.VarChar, email)
-      .query(queries.deleteClientByEmail);
-    response.send("Client deleted.");
-    if (err) {
-      return;
-    } else {
-      response.send(result);
-    }
-  } catch (err) {
-    console.log(err);
-    response.status(500);
-  }
-};
-
 export const updateClientById = async (request, response) => {
-  const { name, lastName, email, address, postalCode } = request.body;
+  const { name, lastName, city, address, postalCode } = request.body;
   const { id } = request.params;
 
   if (
     name == null ||
     lastName == null ||
-    email == null ||
+    city == null ||
     address == null ||
     postalCode == null
   ) {
@@ -155,7 +113,7 @@ export const updateClientById = async (request, response) => {
     .request()
     .input("name", sql.VarChar, name)
     .input("lastName", sql.VarChar, lastName)
-    .input("email", sql.VarChar, email)
+    .input("city", sql.VarChar, city)
     .input("address", sql.VarChar, address)
     .input("postalCode", sql.VarChar, postalCode)
     .input("id", sql.Int, id)
