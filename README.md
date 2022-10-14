@@ -11,7 +11,7 @@ O projeto tem o intuíto do desenvolvimento de métodos http com o nodejs e o ar
 - [Sql Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
 
 ## ℹ️ Infos
-#### Antes de tudo, é necessário verificar se o usuário e senha do Sql Server está como 'admin' e que o mesmo possui permissões de administrador, já que a api faz a autenticação com essas credenciais para a criação do banco de dados e tabelas.
+Antes de tudo, é necessário verificar se o usuário e senha do Sql Server está como 'admin' e que o mesmo possui permissões de administrador, já que a api faz a autenticação com essas credenciais para a criação do banco de dados e tabelas.
 
 ## 🚀 Tecnologias
 
