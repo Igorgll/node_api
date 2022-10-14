@@ -27,3 +27,4 @@ Antes de tudo, é necessário verificar se o usuário e senha do Sql Server est�
 - [x]  cd node_api.
 - [x]  npm install.
 - [x]  npm start.
+- [x]  Com o api rodando, acesse o projeto no front end [database_management_app](https://database-management.netlify.app/)
