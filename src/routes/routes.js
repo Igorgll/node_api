@@ -18,7 +18,7 @@ router.get('/', (request, response) => {
 })
 
 router.use(cors({
-  origin: 'http://localhost:4200' //allow origin from front end to access the back end
+  origin: 'https://database-management.netlify.app' //allow origin from front end to access the back end
 }));
 
 //Public users routes
